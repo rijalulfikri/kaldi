@@ -2,7 +2,7 @@
 
 CXX=${CXX:-g++}
 CXXFLAGS=${CXXFLAGS}
-status=0
+exit 0
 
 # at some point we could try to add packages for Cywgin or macports(?) to this
 # script.
