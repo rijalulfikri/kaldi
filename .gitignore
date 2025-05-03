@@ -64,8 +64,6 @@ venv/
 *.exp
 *.manifest
 /kaldiwin_vs*
-.vscode
-.idea
 
 # /src/
 /src/.short_version
