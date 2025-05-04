@@ -8,6 +8,9 @@ project(VoskLib CXX)
 # Atur path root Kaldi dan OpenBLAS. Ubah ini sesuai dengan lokasi instalasi Anda.
 set(KALDI_ROOT "/Volumes/F/vosk/opt/kaldi")
 set(OPENBLAS_ROOT "${KALDI_ROOT}/tools/OpenBLAS/install") # Asumsi OpenBLAS ada di dalam tools Kaldi
+set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
+include(GNUInstallDirs)
+include(Utils)
 
 # --- Pengaturan Kompilasi ---
 
@@ -15,6 +18,32 @@ set(OPENBLAS_ROOT "${KALDI_ROOT}/tools/OpenBLAS/install") # Asumsi OpenBLAS ada 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+###
+# Tambahkan semua subdirektori utama
+set(SUBDIRS
+    base bin chain chainbin cudamatrix decoder
+    feat featbin fgmmbin fstbin fstext
+    gmm gmmbin hmm
+    ivector ivectorbin kws kwsbin
+    lat latbin lm lmbin matrix
+    nnet nnetbin nnet2 nnet2bin nnet3 nnet3bin
+    online2 online2bin rnnlm rnnlmbin
+    transform tree util
+)
+add_definitions(-DHAVE_CLAPACK=1)
+# target_include_directories
+include_directories(vosk PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${KALDI_ROOT}/vosk-api/src # Direktori saat ini (.)
+    ${KALDI_ROOT}/src
+    ${KALDI_ROOT}/tools/openfst/include
+    ${OPENBLAS_ROOT}/include
+)
+# Tambahkan semua subdirektori utama
+foreach(SUBDIR ${SUBDIRS})
+    add_subdirectory(src/${SUBDIR})
+endforeach()
+###
 # Definisikan source files untuk library
 set(VOSK_SOURCES
     vosk-api/src/recognizer.cc
@@ -59,7 +88,7 @@ target_include_directories(vosk PUBLIC
 
 # Definisikan path ke static library Kaldi dan dependencies lainnya
 set(KALDI_LIBS
-    ${KALDI_ROOT}/src/online2/kaldi-online2.a
+    ${KALDI_ROOT}/src/online2/kaldi-online2.a   #TODO: gunakan yang dibuat oleh CMAKE!!!!!!
     ${KALDI_ROOT}/src/decoder/kaldi-decoder.a
     ${KALDI_ROOT}/src/ivector/kaldi-ivector.a
     ${KALDI_ROOT}/src/gmm/kaldi-gmm.a
