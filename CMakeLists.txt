@@ -88,27 +88,23 @@ target_include_directories(vosk PUBLIC
 
 # Definisikan path ke static library Kaldi dan dependencies lainnya
 set(KALDI_LIBS
-    ${KALDI_ROOT}/src/online2/kaldi-online2.a   #TODO: gunakan yang dibuat oleh CMAKE!!!!!!
-    ${KALDI_ROOT}/src/decoder/kaldi-decoder.a
-    ${KALDI_ROOT}/src/ivector/kaldi-ivector.a
-    ${KALDI_ROOT}/src/gmm/kaldi-gmm.a
-    ${KALDI_ROOT}/src/tree/kaldi-tree.a
-    ${KALDI_ROOT}/src/feat/kaldi-feat.a
-    ${KALDI_ROOT}/src/lat/kaldi-lat.a
-    ${KALDI_ROOT}/src/lm/kaldi-lm.a
-    ${KALDI_ROOT}/src/rnnlm/kaldi-rnnlm.a
-    ${KALDI_ROOT}/src/hmm/kaldi-hmm.a
-    ${KALDI_ROOT}/src/nnet3/kaldi-nnet3.a
-    ${KALDI_ROOT}/src/transform/kaldi-transform.a
-    # Anda mungkin perlu mengecek apakah kaldi-cudamatrix.a diperlukan jika tidak menggunakan CUDA
-    # Jika Anda *tidak* mengompilasi Kaldi dengan dukungan CUDA, library ini mungkin tidak ada atau tidak diperlukan.
-    # Jika Anda *membutuhkannya* dan Kaldi dikompilasi tanpa CUDA, ini bisa menyebabkan error.
-    # Hapus baris berikut jika tidak ada atau tidak diperlukan:
-    ${KALDI_ROOT}/src/cudamatrix/kaldi-cudamatrix.a
-    ${KALDI_ROOT}/src/matrix/kaldi-matrix.a
-    ${KALDI_ROOT}/src/fstext/kaldi-fstext.a
-    ${KALDI_ROOT}/src/util/kaldi-util.a
-    ${KALDI_ROOT}/src/base/kaldi-base.a
+    kaldi-online2   #TODO: gunakan yang dibuat oleh CMAKE!!!!
+    kaldi-decoder
+    kaldi-ivector
+    kaldi-gmm
+    kaldi-tree
+    kaldi-feat
+    kaldi-lat
+    kaldi-lm
+    kaldi-rnnlm
+    kaldi-hmm
+    kaldi-nnet3
+    kaldi-transform
+    kaldi-cudamatrix
+    kaldi-matrix
+    kaldi-fstext
+    kaldi-util
+    kaldi-base
     ${KALDI_ROOT}/tools/openfst/lib/libfst.a
     ${KALDI_ROOT}/tools/openfst/lib/libfstngram.a
     ${OPENBLAS_ROOT}/lib/libopenblas.a
