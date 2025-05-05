@@ -87,7 +87,12 @@ target_include_directories(vosk PUBLIC
 # --- Pengaturan Linker ---
 
 # Definisikan path ke static library Kaldi dan dependencies lainnya
-set(KALDI_LIBS
+# set(KALDI_LIBS 
+#     ${KALDI_ROOT}/src/lib/libkaldi-online2.a
+#     ${KALDI_ROOT}/src/lib/libkaldi-decoder.a)
+
+# Link library-library tersebut ke target 'vosk'
+target_link_libraries(vosk PRIVATE 
     kaldi-online2   #TODO: gunakan yang dibuat oleh CMAKE!!!!
     kaldi-decoder
     kaldi-ivector
@@ -105,6 +110,7 @@ set(KALDI_LIBS
     kaldi-fstext
     kaldi-util
     kaldi-base
+    # fst # OpenFST library (TODO: bisa ngak ya???)
     ${KALDI_ROOT}/tools/openfst/lib/libfst.a
     ${KALDI_ROOT}/tools/openfst/lib/libfstngram.a
     ${OPENBLAS_ROOT}/lib/libopenblas.a
@@ -114,9 +120,6 @@ set(KALDI_LIBS
     ${OPENBLAS_ROOT}/lib/libblas.a   # Mungkin sudah termasuk dalam libopenblas.a
     ${OPENBLAS_ROOT}/lib/libf2c.a    # Atau dependensi lain seperti libgfortran, tergantung bagaimana BLAS/LAPACK dikompilasi
 )
-
-# Link library-library tersebut ke target 'vosk'
-target_link_libraries(vosk PRIVATE ${KALDI_LIBS})
 
 # Terapkan opsi linker ke target 'vosk'
 # -s: Strip symbols (menghapus informasi debug dari hasil akhir)
