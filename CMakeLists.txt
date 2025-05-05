@@ -65,14 +65,14 @@ if(APPLE)
 else()
     set(MATHLIB "OpenBLAS" CACHE STRING "OpenBLAS|MKL|Accelerate")
 endif()
-# option(KALDI_BUILD_EXE "If disabled, will make add_kaldi_executable a no-op" ON)
-# option(KALDI_BUILD_TEST "If disabled, will make add_kaldi_test_executable a no-op" ON)
-# option(KALDI_USE_PATCH_NUMBER "Use MAJOR.MINOR.PATCH format, otherwise MAJOR.MINOR" OFF)
+option(KALDI_BUILD_EXE "If disabled, will make add_kaldi_executable a no-op" OFF)
+option(KALDI_BUILD_TEST "If disabled, will make add_kaldi_test_executable a no-op" OFF)
+option(KALDI_USE_PATCH_NUMBER "Use MAJOR.MINOR.PATCH format, otherwise MAJOR.MINOR" OFF)
 
-# # if (KALDI_BUILD_TEST)
-# #     include(CTest)
-# #     enable_testing()
-# # endif()
+if (KALDI_BUILD_TEST)
+    include(CTest)
+    enable_testing()
+endif()
 
 link_libraries(${CMAKE_DL_LIBS})
 
@@ -217,6 +217,7 @@ else() # Original functionality
     endif()
 endif()
 
+
 # get_third_party(openfst)
 # set(OPENFST_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/openfst)
 # include(third_party/openfst_lib_target)
@@ -229,7 +230,7 @@ endif()
 #            PATHS "${CMAKE_CURRENT_SOURCE_DIR}/tools/openfst/include"
 #            REQUIRED)
 
-# link_libraries(fst)  #TODO ini kok belum bisa????
+# link_libraries(fst)  #Ini belum bisa, karena pada openfst versi yang dibutuhkan oleh kaldi ini, tidak mendukung CMakeLists.txt!
 add_definitions(-DHAVE_CLAPACK=1)
 
 # target_include_directories
