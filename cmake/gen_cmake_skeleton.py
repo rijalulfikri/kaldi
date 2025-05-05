@@ -232,7 +232,7 @@ class CMakeListsLibrary(object):
                 print_wrapper("WARNING: non-standard", filename)
                 return
             libs = makefile.split("ADDLIBS")[-1].split("\n\n")[0]
-            libs = re.findall("[^\s\\\\=]+", libs)
+            libs = re.findall(r"[^\s\\\\=]+", libs)
             for lib in libs:
                 self.depends.append(os.path.splitext(os.path.basename(lib))[0])
 
