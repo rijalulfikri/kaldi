@@ -1,22 +1,13 @@
-# Tentukan versi minimum CMake yang diperlukan
 cmake_minimum_required(VERSION 3.13)
-
-# Definisikan nama proyek dan bahasa yang digunakan (C++)
-project(VoskLib CXX)
+project(kaldi)
 
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/src CACHE PATH "Install path prefix." FORCE)
 endif(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-
-# --- Konfigurasi Path ---
-# Atur path root Kaldi dan OpenBLAS. Ubah ini sesuai dengan lokasi instalasi Anda.
-set(KALDI_ROOT "/Volumes/F/vosk/opt/kaldi")
-set(OPENBLAS_ROOT "${KALDI_ROOT}/tools/OpenBLAS/install") # Asumsi OpenBLAS ada di dalam tools Kaldi
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake;${CMAKE_MODULE_PATH}")
 include(GNUInstallDirs)
 include(Utils)
 
-message(STATUS "CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 if(CONDA_ROOT)
     message(STATUS "Adding ${CONDA_ROOT} directories")
     set(CMAKE_INCLUDE_PATH "${CONDA_ROOT}/include")
@@ -30,7 +21,6 @@ if(CONDA_ROOT)
 endif()
 
 include(third_party/get_third_party)
-# find_package(PythonInterp)
 find_package(Python 3.8 REQUIRED COMPONENTS Interpreter)
 if(NOT PYTHON_EXECUTABLE)
     # Attempt to find Python manually if not found
@@ -39,7 +29,6 @@ if(NOT PYTHON_EXECUTABLE)
         message(FATAL_ERROR "Needs python to auto-generate most CMake files, but not found.")
     endif()
 endif()
-message(STATUS "Using Python executable: ${PYTHON_EXECUTABLE}")
 
 message(STATUS "Running gen_cmake_skeleton.py")
 option(BUILD_SHARED_LIBS "Build shared Kaldi libraries." OFF)
@@ -55,12 +44,8 @@ execute_process(COMMAND ${PYTHON_EXECUTABLE}
 )
 unset(IS_LIB_SHARE)
 
-# --- Pengaturan Kompilasi ---
-
-# Atur standar C++ yang diperlukan (C++17)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_INSTALL_MESSAGE LAZY) # hide "-- Up-to-date: ..."
 if(BUILD_SHARED_LIBS)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -73,7 +58,6 @@ if(BUILD_SHARED_LIBS)
         set(CMAKE_INSTALL_RPATH "$ORIGIN;$ORIGIN/../lib;$ORIGIN/../../tools/openfst/lib")
     endif()
 endif()
-
 
 if(APPLE)
     # Use built-in BLAS on MacOS by default.
@@ -91,7 +75,6 @@ endif()
 # # endif()
 
 link_libraries(${CMAKE_DL_LIBS})
-
 
 find_package(Threads)
 link_libraries(Threads::Threads)
@@ -247,32 +230,95 @@ endif()
 #            REQUIRED)
 
 # link_libraries(fst)  #TODO ini kok belum bisa????
-
-###
-# Tambahkan semua subdirektori utama
-set(SUBDIRS
-    base bin chain chainbin cudamatrix decoder
-    feat featbin fgmmbin fstbin fstext
-    gmm gmmbin hmm
-    ivector ivectorbin kws kwsbin
-    lat latbin lm lmbin matrix
-    nnet nnetbin nnet2 nnet2bin nnet3 nnet3bin
-    online2 online2bin rnnlm rnnlmbin
-    transform tree util
-)
 add_definitions(-DHAVE_CLAPACK=1)
+
 # target_include_directories
+set(KALDI_ROOT "/Volumes/F/vosk/opt/kaldi")
+set(OPENBLAS_ROOT "${KALDI_ROOT}/tools/OpenBLAS/install") # Asumsi OpenBLAS ada di dalam tools Kaldi
+
 include_directories(vosk PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${KALDI_ROOT}/vosk-api/src # Direktori saat ini (.)
-    ${KALDI_ROOT}/src
-    ${KALDI_ROOT}/tools/openfst/include
+    vosk-api/src # Direktori saat ini (.)
+    src
+    tools/openfst/include
     ${OPENBLAS_ROOT}/include
 )
+
+# add all native libraries
+add_subdirectory(src/base) # NOTE, we need to patch the target with version from outside
+set_property(TARGET kaldi-base PROPERTY COMPILE_DEFINITIONS "KALDI_VERSION=\"${KALDI_VERSION}\"")
+add_subdirectory(src/matrix)
+add_subdirectory(src/cudamatrix)
+add_subdirectory(src/util)
+add_subdirectory(src/feat)
+add_subdirectory(src/tree)
+add_subdirectory(src/gmm)
+add_subdirectory(src/transform)
+add_subdirectory(src/fstext)
+add_subdirectory(src/hmm)
+add_subdirectory(src/lm)
+add_subdirectory(src/decoder)
+add_subdirectory(src/lat)
+add_subdirectory(src/nnet)
+add_subdirectory(src/nnet2)
+add_subdirectory(src/nnet3)
+add_subdirectory(src/rnnlm)
+add_subdirectory(src/chain)
+add_subdirectory(src/ivector)
+if(NOT MSVC)
+    add_subdirectory(src/online)
+endif()
+add_subdirectory(src/online2)
+add_subdirectory(src/kws)
+
+add_subdirectory(src/itf)
+
+if(TENSORFLOW_DIR)
+    add_subdirectory(src/tfrnnlm)
+    add_subdirectory(src/tfrnnlmbin)
+endif()
+
+# add all cuda libraries
+if(CUDA_FOUND)
+    add_subdirectory(src/cudafeat)
+    add_subdirectory(src/cudadecoder)
+endif()
+
+# add all native executables
+add_subdirectory(src/bin)
+add_subdirectory(src/gmmbin)
+add_subdirectory(src/featbin)
+add_subdirectory(src/fstbin)
+add_subdirectory(src/lmbin)
+add_subdirectory(src/latbin)
+add_subdirectory(src/nnetbin)
+add_subdirectory(src/nnet2bin)
+add_subdirectory(src/nnet3bin)
+add_subdirectory(src/rnnlmbin)
+add_subdirectory(src/chainbin)
+add_subdirectory(src/ivectorbin)
+if(NOT MSVC)
+    add_subdirectory(src/onlinebin)
+    add_subdirectory(src/online2bin)
+endif()
+add_subdirectory(src/kwsbin)
+###
 # Tambahkan semua subdirektori utama
-foreach(SUBDIR ${SUBDIRS})
-    add_subdirectory(src/${SUBDIR})
-endforeach()
+# set(SUBDIRS
+#     base bin chain chainbin cudamatrix decoder
+#     feat featbin fgmmbin fstbin fstext
+#     gmm gmmbin hmm
+#     ivector ivectorbin kws kwsbin
+#     lat latbin lm lmbin matrix
+#     nnet nnetbin nnet2 nnet2bin nnet3 nnet3bin
+#     online2 online2bin rnnlm rnnlmbin
+#     transform tree util
+# )
+
+# # Tambahkan semua subdirektori utama
+# foreach(SUBDIR ${SUBDIRS})
+#     add_subdirectory(src/${SUBDIR})
+# endforeach()
 ###
 # Definisikan source files untuk library
 set(VOSK_SOURCES
@@ -305,21 +351,7 @@ target_compile_definitions(vosk PRIVATE
     FST_NO_DYNAMIC_LINKING
 )
 
-# Tambahkan include directories ke target 'vosk'
-target_include_directories(vosk PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    ${KALDI_ROOT}/vosk-api/src # Direktori saat ini (.)
-    ${KALDI_ROOT}/src
-    ${KALDI_ROOT}/tools/openfst/include
-    ${OPENBLAS_ROOT}/include
-)
-
 # --- Pengaturan Linker ---
-
-# Definisikan path ke static library Kaldi dan dependencies lainnya
-# set(KALDI_LIBS 
-#     ${KALDI_ROOT}/src/lib/libkaldi-online2.a
-#     ${KALDI_ROOT}/src/lib/libkaldi-decoder.a)
 
 # Link library-library tersebut ke target 'vosk'
 target_link_libraries(vosk PRIVATE 
@@ -373,12 +405,30 @@ set_target_properties(vosk PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DI
 
 message(STATUS "Configuring Vosk Main Executable (vosk_main)")
 
-add_executable(vosk_main ${KALDI_ROOT}/vosk-api/test_vosk.cc) # MyApp adalah nama target executable
+add_executable(vosk_main vosk-api/test_vosk.cc) # MyApp adalah nama target executable
 target_link_libraries(vosk_main PRIVATE vosk)
 
+# add all cuda executables
+if(CUDA_FOUND)
+    add_subdirectory(src/cudafeatbin)
+    add_subdirectory(src/cudadecoderbin)
+endif()
 
-
-# Opsional: Tambahkan pesan status
-message(STATUS "Configuring Vosk Library Build")
-message(STATUS "Kaldi Root: ${KALDI_ROOT}")
-message(STATUS "OpenBLAS Root: ${OPENBLAS_ROOT}")
+if(NOT CONDA_ROOT)
+    include(CMakePackageConfigHelpers)
+    # maybe we should put this into subfolder?
+    configure_package_config_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/kaldi-config.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/cmake/kaldi-config.cmake
+        INSTALL_DESTINATION lib/cmake/kaldi
+    )
+    write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/cmake/kaldi-config-version.cmake
+        VERSION ${KALDI_VERSION}
+        COMPATIBILITY AnyNewerVersion
+    )
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/cmake/kaldi-config.cmake ${CMAKE_CURRENT_BINARY_DIR}/cmake/kaldi-config-version.cmake
+        DESTINATION lib/cmake/kaldi
+    )
+    install(EXPORT kaldi-targets DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/cmake/kaldi)
+endif()
