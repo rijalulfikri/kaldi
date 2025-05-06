@@ -8,11 +8,16 @@
       "args": [],
       "stopAtEntry": false,
       "cwd": "${fileDirname}",
-      "environment": [],
+      "environment": [
+        // {
+        //   "name": "DYLD_LIBRARY_PATH", //Untuk linux, gunakan LD_LIBRARY_PATH
+        //   "value": "/Volumes/F/vosk/opt/kaldi/build/lib"
+        // }
+      ],
       "externalConsole": false,
       "MIMode": "lldb",
       // "preLaunchTask": "C/C++: g++-14 build active file"
-      "preLaunchTask": "C/C++: clang++ build active file"
+      "preLaunchTask": "Link active file"
     }
   ],
   "version": "2.0.0"
