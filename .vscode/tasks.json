@@ -4,10 +4,12 @@
     {
       "label": "Build active file",
       "type": "shell",
-      "command": "gcc",
+      "command": "clang++",
       "args": [
         "-g",
-        "-Isrc",
+        "-I/Volumes/F/vosk/opt/kaldi/vosk-api/src",
+        "-I/Volumes/F/vosk/opt/kaldi/src",
+        "-I/Volumes/F/vosk/opt/kaldi/tools/openfst/include",
         "-c",
         "${file}",
         "-o",
@@ -22,17 +24,20 @@
     {
       "label": "Link active file",
       "type": "cppbuild",
-      "command": "gcc",
+      "command": "clang++",
       "args": [
         "-g",
         "${fileBasenameNoExtension}.o",
         "-o",
         "${fileBasenameNoExtension}",
-        "-L../build/lib",
+        "-L/Volumes/F/vosk/opt/kaldi/build/lib",
+        "-L/Volumes/F/vosk/opt/kaldi/src/lib",
         "-lvosk",
         "-ldl",
+        "-lkaldi-feat",
         "-lpthread",
-        "-Wl,-rpath,/Volumes/F/vosk/opt/vosk-api/build/lib"
+        "-Wl,-rpath,/Volumes/F/vosk/opt/kaldi/build/lib",
+        "-Wl,-rpath,/Volumes/F/vosk/opt/kaldi/src/lib"
       ],
       "options": {
         "cwd": "${fileDirname}"
