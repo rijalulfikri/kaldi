@@ -19,7 +19,7 @@ add_library(vosk SHARED ${VOSK_SOURCES})
 # -fPIC: Position Independent Code (diperlukan untuk shared library)
 target_compile_options(vosk PRIVATE
     -g
-    -O3
+    -O0
     -Wno-deprecated-declarations
     -fPIC
 )
