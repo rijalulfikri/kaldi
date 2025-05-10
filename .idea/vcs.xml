@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tools/OpenBLAS" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tools/clapack" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/tools/openfst-1.8.0" vcs="Git" />
+  </component>
+</project>
