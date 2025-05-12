@@ -21,13 +21,10 @@ if(CONDA_ROOT)
 endif()
 
 include(third_party/get_third_party)
-find_package(Python 3.8 REQUIRED COMPONENTS Interpreter)
+
+find_package(PythonInterp)
 if(NOT PYTHON_EXECUTABLE)
-    # Attempt to find Python manually if not found
-    find_program(PYTHON_EXECUTABLE python3)
-    if(NOT PYTHON_EXECUTABLE)
-        message(FATAL_ERROR "Needs python to auto-generate most CMake files, but not found.")
-    endif()
+    message(FATAL_ERROR "Needs python to auto-generate most CMake files, but not found.")
 endif()
 
 message(STATUS "Running gen_cmake_skeleton.py")
@@ -65,8 +62,8 @@ if(APPLE)
 else()
     set(MATHLIB "OpenBLAS" CACHE STRING "OpenBLAS|MKL|Accelerate")
 endif()
-option(KALDI_BUILD_EXE "If disabled, will make add_kaldi_executable a no-op" OFF)
-option(KALDI_BUILD_TEST "If disabled, will make add_kaldi_test_executable a no-op" OFF)
+option(KALDI_BUILD_EXE "If disabled, will make add_kaldi_executable a no-op" ON)
+option(KALDI_BUILD_TEST "If disabled, will make add_kaldi_test_executable a no-op" ON)
 option(KALDI_USE_PATCH_NUMBER "Use MAJOR.MINOR.PATCH format, otherwise MAJOR.MINOR" OFF)
 
 if (KALDI_BUILD_TEST)
@@ -217,9 +214,9 @@ else() # Original functionality
     endif()
 endif()
 
-# get_third_party(openfst)
-# set(OPENFST_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR}/openfst)
-# include(third_party/openfst_lib_target)
+get_third_party(openfst)
+set(OPENFST_ROOT_DIR ${CMAKE_SOURCE_DIR}/build/openfst-download/_deps/openfst-src)
+include(third_party/openfst_lib_target)
 #find_library(OpenFST_LIBRARY
 #            NAMES fst
 #            PATHS ${CMAKE_CURRENT_SOURCE_DIR}/tools/openfst/lib
@@ -229,9 +226,7 @@ endif()
 #            PATHS "${CMAKE_CURRENT_SOURCE_DIR}/tools/openfst/include"
 #            REQUIRED)
 
-# link_libraries(fst)  
-include_directories(tools/openfst/include)
-link_libraries(tools/openfst/lib/libfst.a)
+link_libraries(fst)
 
 # add all native libraries
 add_subdirectory(src/base) # NOTE, we need to patch the target with version from outside
