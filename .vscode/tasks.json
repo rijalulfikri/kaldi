@@ -35,6 +35,7 @@
         "-lvosk",
         "-ldl",
         "-lkaldi-feat",
+        "-lkaldi-fstext", //Ini diperlukan oleh context-fst-test!!!
         "-lpthread",
         "-Wl,-rpath,/Volumes/F/vosk/opt/kaldi/build/lib",
         "-Wl,-rpath,/Volumes/F/vosk/opt/kaldi/src/lib"

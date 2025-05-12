@@ -30,7 +30,7 @@ target_compile_definitions(vosk PRIVATE
     FST_NO_DYNAMIC_LINKING
 )
 
-set(OPENBLAS_ROOT "${KALDI_ROOT}/tools/OpenBLAS/install") # Asumsi OpenBLAS ada di dalam tools Kaldi
+set(OPENBLAS_ROOT "${CMAKE_SOURCE_DIR}/tools/OpenBLAS/install") # Asumsi OpenBLAS ada di dalam tools Kaldi
 
 target_include_directories(vosk PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -60,8 +60,8 @@ target_link_libraries(vosk PRIVATE
     kaldi-fstext
     kaldi-util
     kaldi-base
-    ${KALDI_ROOT}/tools/openfst/lib/libfst.a
-    ${KALDI_ROOT}/tools/openfst/lib/libfstngram.a
+    ${CMAKE_SOURCE_DIR}/tools/openfst/lib/libfst.a
+    ${CMAKE_SOURCE_DIR}/tools/openfst/lib/libfstngram.a
     ${OPENBLAS_ROOT}/lib/libopenblas.a
     # Library berikut mungkin adalah dependensi dari OpenBLAS atau Kaldi math
     # Periksa apakah path dan nama file ini benar untuk instalasi Anda

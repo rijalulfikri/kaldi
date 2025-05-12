@@ -229,8 +229,9 @@ endif()
 #            PATHS "${CMAKE_CURRENT_SOURCE_DIR}/tools/openfst/include"
 #            REQUIRED)
 
-# link_libraries(fst)  #Ini belum bisa, karena pada openfst versi yang dibutuhkan oleh kaldi ini, tidak mendukung CMakeLists.txt!
+# link_libraries(fst)  
 include_directories(tools/openfst/include)
+link_libraries(tools/openfst/lib/libfst.a)
 
 # add all native libraries
 add_subdirectory(src/base) # NOTE, we need to patch the target with version from outside
@@ -292,7 +293,6 @@ endif()
 add_subdirectory(src/kwsbin)
 
 # Vosk API
-set(KALDI_ROOT ${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(vosk-api)
 
 # add all cuda executables
