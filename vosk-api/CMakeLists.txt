@@ -44,30 +44,30 @@ target_include_directories(vosk PUBLIC
 # Link library-library tersebut ke target 'vosk'
 target_link_libraries(vosk PRIVATE 
     kaldi-online2   
-    kaldi-decoder
-    kaldi-ivector
-    kaldi-gmm
-    kaldi-tree
-    kaldi-feat
-    kaldi-lat
-    kaldi-lm
     kaldi-rnnlm
-    kaldi-hmm
-    kaldi-nnet3
-    kaldi-transform
-    kaldi-cudamatrix
-    kaldi-matrix
-    kaldi-fstext
-    kaldi-util
-    kaldi-base
-    ${CMAKE_SOURCE_DIR}/tools/openfst/lib/libfst.a
     ${CMAKE_SOURCE_DIR}/tools/openfst/lib/libfstngram.a
-    ${OPENBLAS_ROOT}/lib/libopenblas.a
+    # kaldi-decoder
+    # kaldi-ivector
+    # kaldi-gmm
+    # kaldi-tree
+    # kaldi-feat
+    # kaldi-lat
+    # kaldi-lm
+    # kaldi-hmm
+    # kaldi-nnet3
+    # kaldi-transform
+    # kaldi-cudamatrix
+    # kaldi-matrix
+    # kaldi-fstext
+    # kaldi-util
+    # kaldi-base
+    # ${CMAKE_SOURCE_DIR}/tools/openfst/lib/libfst.a
+    # ${OPENBLAS_ROOT}/lib/libopenblas.a
     # Library berikut mungkin adalah dependensi dari OpenBLAS atau Kaldi math
     # Periksa apakah path dan nama file ini benar untuk instalasi Anda
-    ${OPENBLAS_ROOT}/lib/liblapack.a # Mungkin sudah termasuk dalam libopenblas.a
-    ${OPENBLAS_ROOT}/lib/libblas.a   # Mungkin sudah termasuk dalam libopenblas.a
-    ${OPENBLAS_ROOT}/lib/libf2c.a    # Atau dependensi lain seperti libgfortran, tergantung bagaimana BLAS/LAPACK dikompilasi
+    # ${OPENBLAS_ROOT}/lib/liblapack.a # Mungkin sudah termasuk dalam libopenblas.a
+    # ${OPENBLAS_ROOT}/lib/libblas.a   # Mungkin sudah termasuk dalam libopenblas.a
+    # ${OPENBLAS_ROOT}/lib/libf2c.a    # Atau dependensi lain seperti libgfortran, tergantung bagaimana BLAS/LAPACK dikompilasi
 )
 
 # Terapkan opsi linker ke target 'vosk'
