@@ -7,6 +7,7 @@
       "command": "clang++",
       "args": [
         "-g",
+        "-DKALDI_NO_PORTAUDIO",
         "-I/Volumes/F/vosk/opt/kaldi/vosk-api/src",
         "-I/Volumes/F/vosk/opt/kaldi/src",
         "-I/Volumes/F/vosk/opt/kaldi/tools/openfst/include",
@@ -36,6 +37,12 @@
         "-ldl",
         "-lkaldi-feat",
         "-lkaldi-fstext", //Ini diperlukan oleh context-fst-test!!!
+        "-lkaldi-util",
+        "-lkaldi-matrix",
+        "-lkaldi-base",
+        "-lkaldi-hmm",
+        "-lkaldi-tree",
+        "-lkaldi-gmm",
         "-lpthread",
         "-Wl,-rpath,/Volumes/F/vosk/opt/kaldi/build/lib",
         "-Wl,-rpath,/Volumes/F/vosk/opt/kaldi/src/lib"
